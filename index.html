@@ -3,6 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Content Security Policy — restricts what can run on this page.
+       scripts: only same-origin files in /scripts/
+       styles:  same-origin + Google Fonts
+       fonts:   Google Fonts only
+       no inline scripts, no eval, no external script sources -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self';
+    style-src 'self' https://fonts.googleapis.com;
+    font-src https://fonts.gstatic.com;
+    img-src 'self' data:;
+    connect-src 'self';
+    frame-src 'none';
+    object-src 'none';
+    base-uri 'self';
+  " />
   <meta name="description" content="An open source website with 30 days to live. Add anything. Delete nothing. Then it's gone." />
 
   <!-- Open Graph / Social -->

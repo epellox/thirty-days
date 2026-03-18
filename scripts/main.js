@@ -171,24 +171,72 @@ function initCountdown() {
    ───────────────────────────────────────── */
 
 /**
+ * Escapes a string for safe insertion into HTML.
+ * Prevents XSS from untrusted guestbook/contribution data.
+ */
+function escapeHtml(str) {
+  const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#x27;' };
+  return String(str).replace(/[&<>"']/g, c => map[c]);
+}
+
+/**
+ * Returns true if a GitHub handle contains only valid characters.
+ * GitHub handles: alphanumeric + hyphens, no leading/trailing hyphens, max 39 chars.
+ */
+function isValidGithubHandle(handle) {
+  return /^[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,37}[a-zA-Z0-9])?$/.test(handle);
+}
+
+/**
+ * Returns true if a contribution URL is a safe relative path under /contributions/.
+ * Blocks javascript:, data:, and external URLs.
+ */
+function isValidContributionUrl(url) {
+  return /^\.\/contributions\/[a-zA-Z0-9._\-/]+$/.test(url);
+}
+
+/**
  * Creates a single guestbook entry DOM element.
+ * All values are escaped before DOM insertion.
  */
 function createGuestbookEntry(entry) {
   const el = document.createElement('div');
   el.className = 'guestbook-entry';
 
-  // Name (linked to GitHub if handle provided)
-  const nameLink = entry.github
-    ? `<a href="https://github.com/${entry.github}" target="_blank" rel="noopener noreferrer">${entry.name}</a>`
-    : entry.name;
+  const safeName    = escapeHtml(entry.name    || '');
+  const safeMessage = escapeHtml(entry.message || '');
+  const safeDate    = escapeHtml(entry.date    || '');
 
-  el.innerHTML = `
-    <div class="entry-meta">
-      <span class="entry-name">${nameLink}</span>
-      <span class="entry-message">${entry.message}</span>
-    </div>
-    <span class="entry-date">${entry.date}</span>
-  `;
+  // Build name — link to GitHub only if handle passes validation
+  const meta = document.createElement('div');
+  meta.className = 'entry-meta';
+
+  const nameSpan = document.createElement('span');
+  nameSpan.className = 'entry-name';
+
+  if (entry.github && isValidGithubHandle(entry.github)) {
+    const a = document.createElement('a');
+    a.href = `https://github.com/${encodeURIComponent(entry.github)}`;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.textContent = entry.name || '';
+    nameSpan.appendChild(a);
+  } else {
+    nameSpan.textContent = entry.name || '';
+  }
+
+  const msgSpan = document.createElement('span');
+  msgSpan.className = 'entry-message';
+  msgSpan.textContent = entry.message || '';
+
+  const dateSpan = document.createElement('span');
+  dateSpan.className = 'entry-date';
+  dateSpan.textContent = entry.date || '';
+
+  meta.appendChild(nameSpan);
+  meta.appendChild(msgSpan);
+  el.appendChild(meta);
+  el.appendChild(dateSpan);
 
   return el;
 }
@@ -234,19 +282,44 @@ async function initGuestbook() {
 
 /**
  * Creates a single contribution card DOM element.
+ * URL is validated to only allow relative paths under /contributions/.
+ * All text content is set via textContent, not innerHTML.
  */
 function createContributionCard(item) {
   const card = document.createElement('div');
   card.className = 'contribution-card';
 
-  card.innerHTML = `
-    <p class="card-title">${item.title}</p>
-    <p class="card-desc">${item.description}</p>
-    <p class="card-author">by ${item.author}</p>
-    <a class="card-link" href="${item.url}" target="_blank" rel="noopener noreferrer">
-      <span class="sr-only">Open ${item.title}</span>
-    </a>
-  `;
+  const title  = document.createElement('p');
+  title.className = 'card-title';
+  title.textContent = item.title || '';
+
+  const desc = document.createElement('p');
+  desc.className = 'card-desc';
+  desc.textContent = item.description || '';
+
+  const author = document.createElement('p');
+  author.className = 'card-author';
+  author.textContent = `by ${item.author || ''}`;
+
+  card.appendChild(title);
+  card.appendChild(desc);
+  card.appendChild(author);
+
+  // Only link if URL is a safe relative path under /contributions/
+  if (item.url && isValidContributionUrl(item.url)) {
+    const link = document.createElement('a');
+    link.className = 'card-link';
+    link.href = item.url;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+
+    const srText = document.createElement('span');
+    srText.className = 'sr-only';
+    srText.textContent = `Open ${item.title || 'contribution'}`;
+    link.appendChild(srText);
+
+    card.appendChild(link);
+  }
 
   return card;
 }
