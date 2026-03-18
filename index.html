@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="An open source website with 30 days to live. Add anything. Delete nothing. Then it's gone." />
+
+  <!-- Open Graph / Social -->
+  <meta property="og:title" content="30 Days. Then Gone." />
+  <meta property="og:description" content="An open source website that ceases to exist on April 17, 2026. Fork it. Add to it. Leave your mark." />
+  <meta property="og:type" content="website" />
+
+  <title>30 Days. Then Gone.</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════
+       AGREEMENT MODAL
+       Shown once on first visit.
+       Stored in localStorage after agreement.
+       ═══════════════════════════════════════════ -->
+  <div id="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div id="modal">
+
+      <p class="modal-subtitle">Before you enter</p>
+      <h1 class="modal-title" id="modal-title">30 Days.<br>Then Gone.</h1>
+
+      <p style="font-size:0.875rem; color:#f0ede6; margin-bottom:1.5rem;">
+        This is a public experiment. An open source website that lives for exactly 30 days,
+        then ceases to exist. Anyone in the world can fork the repo and add to it.
+        Nothing gets deleted. Every contributor leaves their mark permanently — until April 17, 2026.
+      </p>
+
+      <!-- The 5 rules -->
+      <p style="font-size:0.75rem; color:#666; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.5rem;">The rules</p>
+      <ol class="modal-rules" aria-label="Project rules">
+        <li><span class="rule-number">01</span> Add anything you want. Delete nothing.</li>
+        <li><span class="rule-number">02</span> Comment your code. Strangers will read it.</li>
+        <li><span class="rule-number">03</span> No malicious content. You are responsible for what you submit.</li>
+        <li><span class="rule-number">04</span> The end date is fixed. The clock does not stop.</li>
+        <li><span class="rule-number">05</span> On April 17, 2026 — it's gone. No archive. No revival.</li>
+      </ol>
+
+      <!-- Disclaimer -->
+      <div class="modal-disclaimer" role="note">
+        <strong>Disclaimer:</strong> This project is unmoderated and open to the public.
+        Content is contributed by strangers. No one reviews submissions before they go live.
+        You are solely responsible for any code or content you contribute.
+        Do not submit anything you wouldn't want permanently associated with your name
+        for the remaining life of this project. Security vulnerabilities in contributions
+        are the responsibility of their authors.
+      </div>
+
+      <button id="agree-btn" type="button">
+        I understand — let me in
+      </button>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       MAIN CONTENT
+       Hidden until agreement is recorded.
+       ═══════════════════════════════════════════ -->
+  <div id="main-content" class="hidden">
+
+    <!-- ─────────────────────────────────────────
+         HERO SECTION
+         ───────────────────────────────────────── -->
+    <section class="hero">
+      <div class="container">
+
+        <p class="hero-label">An open experiment</p>
+        <h1>30 Days.<br>Then Gone.</h1>
+
+        <p class="hero-subtitle">
+          An open source website built by strangers, for strangers.
+          Fork it. Add to it. Leave your mark.
+          On April 17, 2026 — it ceases to exist.
+        </p>
+
+        <!-- Live countdown clock -->
+        <!-- JS updates #cd-days, #cd-hours, #cd-minutes, #cd-seconds every second -->
+        <div class="countdown" aria-label="Time remaining" role="timer">
+          <div class="countdown-unit">
+            <span class="countdown-number" id="cd-days">00</span>
+            <span class="countdown-label">days</span>
+          </div>
+
+          <span class="countdown-sep" aria-hidden="true">:</span>
+
+          <div class="countdown-unit">
+            <span class="countdown-number" id="cd-hours">00</span>
+            <span class="countdown-label">hours</span>
+          </div>
+
+          <span class="countdown-sep" aria-hidden="true">:</span>
+
+          <div class="countdown-unit">
+            <span class="countdown-number" id="cd-minutes">00</span>
+            <span class="countdown-label">mins</span>
+          </div>
+
+          <span class="countdown-sep" aria-hidden="true">:</span>
+
+          <div class="countdown-unit">
+            <span class="countdown-number" id="cd-seconds">00</span>
+            <span class="countdown-label">secs</span>
+          </div>
+        </div>
+
+        <p class="hero-dates muted">
+          Launched <span>March 18, 2026</span> &nbsp;·&nbsp; Ends <span>April 17, 2026</span>
+        </p>
+
+      </div>
+    </section>
+
+    <!-- ─────────────────────────────────────────
+         RULES SECTION
+         ───────────────────────────────────────── -->
+    <section id="rules">
+      <div class="container">
+
+        <p class="section-label">How this works</p>
+        <h2>The Rules</h2>
+
+        <ol class="rules-list" aria-label="Project rules">
+          <li class="rule-item">
+            <span class="rule-num" aria-hidden="true">01</span>
+            <p class="rule-text">Add anything you want. Delete nothing. Every contribution is permanent for the life of the project.</p>
+          </li>
+          <li class="rule-item">
+            <span class="rule-num" aria-hidden="true">02</span>
+            <p class="rule-text">Comment your code. Strangers will read it, build on it, and be confused without context.</p>
+          </li>
+          <li class="rule-item">
+            <span class="rule-num" aria-hidden="true">03</span>
+            <p class="rule-text">No malicious content. You are responsible for the security and content of your own submission.</p>
+          </li>
+          <li class="rule-item">
+            <span class="rule-num" aria-hidden="true">04</span>
+            <p class="rule-text">The end date is fixed. The clock does not stop, pause, or extend for any reason.</p>
+          </li>
+          <li class="rule-item">
+            <span class="rule-num" aria-hidden="true">05</span>
+            <p class="rule-text">On April 17, 2026 — it's gone. No archive. No revival. No nostalgia.</p>
+          </li>
+        </ol>
+
+      </div>
+    </section>
+
+    <!-- ─────────────────────────────────────────
+         GUESTBOOK SECTION
+         Entries are fetched from guestbook.json.
+         To sign: add your object to guestbook.json
+         and open a PR.
+         ───────────────────────────────────────── -->
+    <section id="guestbook">
+      <div class="container">
+
+        <p class="section-label">Visitors</p>
+        <h2>Who's Been Here</h2>
+
+        <!-- JS renders entries from guestbook.json into this container -->
+        <div id="guestbook-entries" aria-live="polite">
+          <p class="loading-text">Loading...</p>
+        </div>
+
+        <div class="callout">
+          <strong>Want to sign?</strong> Add your entry to
+          <code>guestbook.json</code> and open a pull request.
+          See <a href="CONTRIBUTING.md">CONTRIBUTING.md</a> for the format.
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ─────────────────────────────────────────
+         CONTRIBUTIONS SECTION
+         To add your contribution:
+           1. Add your files to /contributions/
+           2. Add your entry to the JSON array in the
+              <script id="contributions-data"> tag below
+           3. Open a PR
+         ───────────────────────────────────────── -->
+    <section id="contributions">
+      <div class="container">
+
+        <p class="section-label">What's been built</p>
+        <h2>Contributions</h2>
+
+        <!-- JS renders cards from #contributions-data into this grid -->
+        <div id="contributions-grid"></div>
+
+        <div class="callout">
+          <strong>Want to add something?</strong> Drop your files in
+          <code>/contributions/your-name/</code>, add your card to the JSON
+          below, and open a PR. See <a href="CONTRIBUTING.md">CONTRIBUTING.md</a> for the full guide.
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ─────────────────────────────────────────
+         FOOTER
+         ───────────────────────────────────────── -->
+    <footer>
+      <div class="container">
+        <div class="footer-inner">
+          <p class="footer-tagline">
+            Built by strangers. Owned by no one. Gone in
+            <span class="days-left" id="footer-days-left">30 days</span>.
+          </p>
+          <nav class="footer-links" aria-label="Footer links">
+            <a href="https://github.com/jonahkroll/thirty-days" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="CONTRIBUTING.md">Contribute</a>
+            <a href="#guestbook">Guestbook</a>
+          </nav>
+        </div>
+      </div>
+    </footer>
+
+  </div><!-- /#main-content -->
+
+  <!-- ═══════════════════════════════════════════
+       CONTRIBUTIONS DATA
+       ─────────────────────────────────────────
+       Contributors: add your card entry here.
+       Copy one of the existing objects and fill in your details.
+       The "url" field should point to your file in /contributions/.
+
+       Format:
+       {
+         "title": "My Thing",
+         "description": "One sentence about what it does.",
+         "author": "Your Name (@github_handle)",
+         "url": "./contributions/your-name/index.html"
+       }
+
+       Then open a PR. That's it.
+       ═══════════════════════════════════════════ -->
+  <script id="contributions-data" type="application/json">
+    []
+  </script>
+
+  <!-- Core scripts -->
+  <script src="scripts/main.js"></script>
+
+  <!--
+    CONTRIBUTOR SCRIPTS
+    If your contribution needs JavaScript, you can either:
+    a) Add to the bottom of /scripts/main.js (small additions)
+    b) Add a new <script> tag here pointing to your file (preferred for larger scripts)
+
+    Example:
+    <script src="scripts/your-name.js"></script>
+  -->
+
+</body>
+</html>

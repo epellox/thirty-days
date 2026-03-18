@@ -1,0 +1,621 @@
+/*
+  MAIN STYLESHEET — 30 Days Project
+  ===================================
+  Contributors: please add your styles at the BOTTOM of this file
+  or in a separate file inside /styles/
+  DO NOT modify existing rules — only add new ones
+  Use CSS variables defined in :root for consistency
+*/
+
+/* ─────────────────────────────────────────
+   GOOGLE FONTS IMPORT
+   ───────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Bebas+Neue&display=swap');
+
+/* ─────────────────────────────────────────
+   CSS VARIABLES — DESIGN SYSTEM
+   Modify these to retheme the entire site
+   ───────────────────────────────────────── */
+:root {
+  /* Colors */
+  --color-bg:       #0a0a0a;   /* near-black background */
+  --color-text:     #f0ede6;   /* warm off-white body text */
+  --color-accent:   #e03a2f;   /* red — urgency, the clock */
+  --color-muted:    #666666;   /* secondary text, borders */
+  --color-border:   #2a2a2a;   /* subtle separators */
+  --color-surface:  #111111;   /* cards, modals, elevated surfaces */
+  --color-overlay:  rgba(0, 0, 0, 0.85); /* modal backdrop */
+
+  /* Typography */
+  --font-mono:      'IBM Plex Mono', 'Courier New', monospace;
+  --font-display:   'Bebas Neue', Impact, sans-serif;
+
+  /* Font sizes — fluid scale */
+  --text-xs:    0.75rem;   /* 12px */
+  --text-sm:    0.875rem;  /* 14px */
+  --text-base:  1rem;      /* 16px */
+  --text-lg:    1.125rem;  /* 18px */
+  --text-xl:    1.25rem;   /* 20px */
+  --text-2xl:   1.5rem;    /* 24px */
+  --text-4xl:   2.25rem;   /* 36px */
+  --text-6xl:   3.75rem;   /* 60px */
+  --text-8xl:   6rem;      /* 96px */
+
+  /* Spacing */
+  --space-1:    0.25rem;
+  --space-2:    0.5rem;
+  --space-3:    0.75rem;
+  --space-4:    1rem;
+  --space-6:    1.5rem;
+  --space-8:    2rem;
+  --space-12:   3rem;
+  --space-16:   4rem;
+  --space-24:   6rem;
+
+  /* Layout */
+  --max-width:  800px;
+  --radius:     2px;
+
+  /* Transitions */
+  --transition: 200ms ease;
+}
+
+/* ─────────────────────────────────────────
+   RESET & BASE
+   ───────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+/* Grain texture overlay — applied to body pseudo-element */
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: var(--text-base);
+  line-height: 1.7;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Grain texture via SVG noise filter */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.4;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+  transition: opacity var(--transition);
+}
+
+a:hover {
+  opacity: 0.75;
+  text-decoration: underline;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+/* ─────────────────────────────────────────
+   LAYOUT
+   ───────────────────────────────────────── */
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+
+/* ─────────────────────────────────────────
+   TYPOGRAPHY
+   ───────────────────────────────────────── */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+}
+
+h1 { font-size: clamp(3rem, 10vw, var(--text-8xl)); }
+h2 { font-size: clamp(2rem, 6vw, var(--text-4xl)); }
+h3 { font-size: var(--text-2xl); }
+
+p {
+  color: var(--color-text);
+  max-width: 65ch;
+}
+
+.muted {
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+}
+
+/* ─────────────────────────────────────────
+   AGREEMENT MODAL
+   ───────────────────────────────────────── */
+#modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--color-overlay);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+  /* hidden by default — shown via JS */
+}
+
+#modal-backdrop.hidden {
+  display: none;
+}
+
+#modal {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  max-width: 600px;
+  width: 100%;
+  padding: var(--space-8);
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-title {
+  font-family: var(--font-display);
+  font-size: var(--text-4xl);
+  color: var(--color-text);
+  margin-bottom: var(--space-2);
+}
+
+.modal-subtitle {
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-8);
+}
+
+.modal-rules {
+  margin: var(--space-6) 0;
+  border-left: 2px solid var(--color-accent);
+  padding-left: var(--space-4);
+}
+
+.modal-rules li {
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.modal-rules li:last-child {
+  border-bottom: none;
+}
+
+.modal-rules .rule-number {
+  color: var(--color-accent);
+  font-weight: 600;
+  margin-right: var(--space-2);
+}
+
+.modal-disclaimer {
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+  line-height: 1.6;
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  margin: var(--space-6) 0;
+}
+
+/* The main CTA button */
+#agree-btn {
+  display: block;
+  width: 100%;
+  background: var(--color-accent);
+  color: var(--color-text);
+  border: none;
+  font-family: var(--font-mono);
+  font-size: var(--text-base);
+  font-weight: 500;
+  padding: var(--space-4) var(--space-8);
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  transition: opacity var(--transition);
+  margin-top: var(--space-6);
+}
+
+#agree-btn:hover {
+  opacity: 0.85;
+}
+
+/* ─────────────────────────────────────────
+   MAIN CONTENT
+   ───────────────────────────────────────── */
+#main-content {
+  /* hidden by default until agreement */
+}
+
+#main-content.hidden {
+  display: none;
+}
+
+/* ─────────────────────────────────────────
+   HERO SECTION
+   ───────────────────────────────────────── */
+.hero {
+  padding: var(--space-24) 0 var(--space-16);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.hero-label {
+  font-size: var(--text-xs);
+  color: var(--color-accent);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-4);
+}
+
+.hero h1 {
+  color: var(--color-text);
+  margin-bottom: var(--space-4);
+}
+
+.hero-subtitle {
+  color: var(--color-muted);
+  font-size: var(--text-lg);
+  max-width: 55ch;
+  margin-bottom: var(--space-8);
+}
+
+/* Countdown clock */
+.countdown {
+  display: flex;
+  gap: var(--space-6);
+  margin: var(--space-8) 0;
+  flex-wrap: wrap;
+}
+
+.countdown-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.countdown-number {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 8vw, 5rem);
+  color: var(--color-accent);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  /* monospaced numbers to prevent layout shift */
+  font-variant-numeric: tabular-nums;
+}
+
+.countdown-label {
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-top: var(--space-1);
+}
+
+/* Separator colon between units */
+.countdown-sep {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 8vw, 5rem);
+  color: var(--color-border);
+  line-height: 1;
+  align-self: flex-start;
+  padding-top: 0;
+}
+
+.hero-dates {
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+  margin-top: var(--space-4);
+  letter-spacing: 0.05em;
+}
+
+.hero-dates span {
+  color: var(--color-text);
+}
+
+/* ─────────────────────────────────────────
+   SECTION SHARED STYLES
+   ───────────────────────────────────────── */
+section {
+  padding: var(--space-16) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.section-label {
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-3);
+}
+
+section h2 {
+  color: var(--color-text);
+  margin-bottom: var(--space-8);
+}
+
+/* Instruction callout box */
+.callout {
+  border: 1px solid var(--color-border);
+  padding: var(--space-4) var(--space-6);
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+  margin-top: var(--space-8);
+}
+
+.callout code {
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+}
+
+/* ─────────────────────────────────────────
+   RULES SECTION
+   ───────────────────────────────────────── */
+.rules-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.rule-item {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: var(--space-4);
+  align-items: start;
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.rule-item:last-child {
+  border-bottom: none;
+}
+
+.rule-num {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  color: var(--color-accent);
+  line-height: 1;
+}
+
+.rule-text {
+  font-size: var(--text-base);
+  color: var(--color-text);
+  padding-top: var(--space-1);
+}
+
+/* ─────────────────────────────────────────
+   GUESTBOOK SECTION
+   ───────────────────────────────────────── */
+#guestbook-entries {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-bottom: var(--space-6);
+}
+
+.guestbook-entry {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-4);
+  align-items: baseline;
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.entry-meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.entry-name {
+  font-weight: 600;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+}
+
+.entry-name a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.entry-name a:hover {
+  color: var(--color-accent);
+}
+
+.entry-message {
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
+.entry-date {
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+  white-space: nowrap;
+}
+
+/* Loading / error state */
+.loading-text {
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+  padding: var(--space-4) 0;
+}
+
+/* ─────────────────────────────────────────
+   CONTRIBUTIONS SECTION
+   ───────────────────────────────────────── */
+#contributions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.contribution-card {
+  border: 1px solid var(--color-border);
+  padding: var(--space-4);
+  background: var(--color-surface);
+  transition: border-color var(--transition);
+  position: relative;
+}
+
+.contribution-card:hover {
+  border-color: var(--color-accent);
+}
+
+.card-title {
+  font-weight: 600;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  margin-bottom: var(--space-2);
+}
+
+.card-desc {
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+  line-height: 1.5;
+  margin-bottom: var(--space-3);
+}
+
+.card-author {
+  font-size: var(--text-xs);
+  color: var(--color-accent);
+}
+
+.card-link {
+  display: block;
+  position: absolute;
+  inset: 0;
+}
+
+/* Empty state when no contributions yet */
+.empty-state {
+  padding: var(--space-8) 0;
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+  border: 1px dashed var(--color-border);
+  text-align: center;
+}
+
+/* ─────────────────────────────────────────
+   FOOTER
+   ───────────────────────────────────────── */
+footer {
+  padding: var(--space-12) 0;
+  border-top: none;
+}
+
+.footer-inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.footer-tagline {
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
+.footer-tagline .days-left {
+  color: var(--color-accent);
+}
+
+.footer-links {
+  display: flex;
+  gap: var(--space-6);
+}
+
+.footer-links a {
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+  letter-spacing: 0.05em;
+}
+
+.footer-links a:hover {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+/* ─────────────────────────────────────────
+   UTILITY CLASSES
+   ───────────────────────────────────────── */
+.accent { color: var(--color-accent); }
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ─────────────────────────────────────────
+   RESPONSIVE
+   ───────────────────────────────────────── */
+@media (max-width: 600px) {
+  .countdown {
+    gap: var(--space-4);
+  }
+
+  .countdown-sep {
+    display: none;
+  }
+
+  .guestbook-entry {
+    grid-template-columns: 1fr;
+  }
+
+  .entry-date {
+    text-align: left;
+  }
+
+  #modal {
+    padding: var(--space-6);
+  }
+}
+
+/* ─────────────────────────────────────────
+   CONTRIBUTOR STYLES — ADD BELOW THIS LINE
+   ─────────────────────────────────────────
+
+   Hello, contributor. This is your zone.
+   Add new styles below. Do not touch anything above.
+   Use the CSS variables in :root — they make your life easier.
+
+   Template:
+
+   /*
+     CONTRIBUTOR: [Your Name] (@github_handle)
+     DATE: YYYY-MM-DD
+     DESCRIPTION: What these styles do
+   */
+
+/* ↓ ↓ ↓ START YOUR CONTRIBUTION HERE ↓ ↓ ↓ */
