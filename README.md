@@ -71,4 +71,4 @@ Built by strangers. For strangers. Gone in 30 days.
 
 ---
 
-*[View the live site](https://jonahkroll.github.io/thirty-days)*
+*[View the live site](https://krollsec.github.io/thirty-days/)*
